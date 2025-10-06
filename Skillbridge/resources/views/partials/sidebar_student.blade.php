@@ -1,5 +1,5 @@
 <a href="{{ route('student.dashboard') }}" class="{{ Route::currentRouteName() == 'student.dashboard' ? 'fw-bold text-primary' : '' }}">Dashboard</a>
-<a href="#" class="{{ Route::currentRouteName() == 'find.instructor' ? 'fw-bold text-primary' : '' }}">Find Instructor</a>
+<a href="{{ route('student.find.courses') }}" class="{{ Route::currentRouteName() == 'student.find.courses' ? 'fw-bold text-primary' : '' }}">Find Courses</a>
 <a href="#" class="{{ Route::currentRouteName() == 'my.courses' ? 'fw-bold text-primary' : '' }}">My Courses</a>
 <a href="#" class="{{ Route::currentRouteName() == 'mock.tests' ? 'fw-bold text-primary' : '' }}">Mock Tests</a>
 <a href="#" class="{{ Route::currentRouteName() == 'performance' ? 'fw-bold text-primary' : '' }}">Performance</a>

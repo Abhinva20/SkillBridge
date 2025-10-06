@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\TeacherCourseController;
+use App\Http\Controllers\StudentCourseController;
 
 // Landing Page
 Route::get('/', function () {return view('welcome');});
@@ -20,6 +23,25 @@ Route::get('/teacher/dashboard', function () {return view('teacher.dashboard');}
 // HomePage
 Route::get('/student/home', function () {return view('student.home');})->name('student.home')->middleware('auth');
 Route::get('/teacher/home', function () {return view('teacher.home');})->name('teacher.home')->middleware('auth');
+Route::get('/admin/dashboard', function () {return view('admin.dashboard');})->name('admin.dashboard')->middleware('auth:admin');
+
+// Admin auth
+Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
+Route::get('/admin/register', [AdminAuthController::class, 'showRegisterForm'])->name('admin.register');
+Route::post('/admin/register', [AdminAuthController::class, 'register'])->name('admin.register.submit');
+Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
+Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+
+// Course Creation
+Route::middleware(['auth'])->group(function () {
+    Route::get('/teacher/course/create', [TeacherCourseController::class, 'create'])->name('teacher.course.create');
+    Route::post('/teacher/course/store', [TeacherCourseController::class, 'store'])->name('teacher.course.store');
+});
+
+// Search Courses
+Route::middleware(['auth'])->group(function () {
+    Route::get('/student/find-courses', [StudentCourseController::class, 'index'])->name('student.find.courses');
+});
 
 // Pending Pages
 Route::get('/student/find-instructor', function(){ })->name('find.instructor');
