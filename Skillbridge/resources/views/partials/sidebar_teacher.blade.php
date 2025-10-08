@@ -4,3 +4,5 @@
 <a href="#" class="{{ Route::currentRouteName() == 'students' ? 'fw-bold text-primary' : '' }}">Students</a>
 <a href="#" class="{{ Route::currentRouteName() == 'materials' ? 'fw-bold text-primary' : '' }}">Materials</a>
 <a href="#" class="{{ Route::currentRouteName() == 'earnings' ? 'fw-bold text-primary' : '' }}">Earnings</a>
+<a href="{{ route('teacher.settings') }}" class="{{ Route::currentRouteName() == 'teacher.settings' ? 'fw-bold text-primary' : '' }}">Settings</a>
+

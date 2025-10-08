@@ -5,4 +5,4 @@
 <a href="#" class="{{ Route::currentRouteName() == 'performance' ? 'fw-bold text-primary' : '' }}">Performance</a>
 <a href="#" class="{{ Route::currentRouteName() == 'certificates' ? 'fw-bold text-primary' : '' }}">Certificates</a>
 <a href="#" class="{{ Route::currentRouteName() == 'payments' ? 'fw-bold text-primary' : '' }}">Payments</a>
-<a href="#" class="{{ Route::currentRouteName() == 'settings' ? 'fw-bold text-primary' : '' }}">Settings</a>
+<a href="{{ route('settings') }}" class="{{ Route::currentRouteName() == 'settings' ? 'fw-bold text-primary' : '' }}">Settings</a>
