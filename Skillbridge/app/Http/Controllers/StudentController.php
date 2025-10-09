@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Course;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,6 +35,12 @@ class StudentController extends Controller
         $student->save();
 
         return back()->with('success', 'Profile updated successfully.');
+    }
+
+    public function showPayment($id)
+    {
+        $course = Course::findOrFail($id);
+        return view('student.payment', compact('course'));
     }
 
 }

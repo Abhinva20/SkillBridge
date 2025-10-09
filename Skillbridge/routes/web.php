@@ -45,6 +45,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/student/find-courses', [StudentCourseController::class, 'index'])->name('student.find.courses');
 });
 
+// Course Payment
+Route::get('/student/payment/{id}', [StudentController::class, 'showPayment'])->name('student.payment');
+
+
 // Settings page
 Route::get('/student/settings', [App\Http\Controllers\StudentController::class, 'settings'])->name('settings');
 Route::post('/student/settings/update', [App\Http\Controllers\StudentController::class, 'updateSettings'])->name('settings.update');

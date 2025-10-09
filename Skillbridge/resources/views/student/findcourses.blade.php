@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 
-                <a href="#" class="enroll-btn">Enroll Now</a>
+                <a href="{{ route('student.payment', $course->id) }}" class="enroll-btn">Enroll Now</a>
             </div>
         @empty
             <div class="empty-state">
