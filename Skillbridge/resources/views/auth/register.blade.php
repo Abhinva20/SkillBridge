@@ -235,14 +235,16 @@
                 
                 <div class="form-group">
                     <label class="form-label">Full Name</label>
-                    <input type="text" name="name" class="form-control" 
-                            placeholder="Enter your full name" value="{{ old('name') }}" required>
+                    <input type="text" name="name" id="name" class="form-control" 
+                        placeholder="Enter your full name" value="{{ old('name') }}" required>
+                    <small id="nameError" class="text-danger" style="display:none;"></small>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Email Address</label>
-                    <input type="email" name="email" class="form-control" 
-                            placeholder="you@example.com" value="{{ old('email') }}" required>
+                    <input type="email" name="email" id="email" class="form-control"
+                        placeholder="you@example.com" value="{{ old('email') }}" required>
+                    <small id="emailError" class="text-danger" style="display:none;"></small>
                 </div>
 
                 <div class="form-group">
@@ -264,20 +266,21 @@
                 <div class="password-row">
                     <div class="form-group">
                         <label class="form-label">Password</label>
-                        <input type="password" name="password" class="form-control" 
-                                placeholder="Min. 8 characters" required>
+                        <input type="password" name="password" id="password" class="form-control" 
+                            placeholder="Min. 8 characters" required>
+                        <small id="passwordError" class="text-danger" style="display:none;"></small>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Confirm Password</label>
-                        <input type="password" name="password_confirmation" class="form-control" 
-                                placeholder="Re-enter password" required>
+                        <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" 
+                            placeholder="Re-enter password" required>
+                        <small id="confirmError" class="text-danger" style="display:none;"></small>
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-register">Create Account</button>
+                <button type="submit" id="registerBtn" class="btn btn-register" disabled>Create Account</button>
             </form>
-
             <div class="login-link">
                 Already have an account? <a href="{{ route('login') }}">Sign in</a>
             </div>
@@ -285,5 +288,151 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const nameInput = document.getElementById('name');
+        const nameError = document.getElementById('nameError');
+
+        // Allow letters (A–Z, a–z) and spaces only
+        const nameRegex = /^[A-Za-z\s]+$/;
+
+        nameInput.addEventListener('blur', validateName);
+        nameInput.addEventListener('input', validateName);
+
+        function validateName() {
+            const name = nameInput.value.trim();
+
+            if (name === '') {
+                nameError.style.display = 'block';
+                nameError.textContent = 'Full name is required.';
+                nameInput.classList.add('is-invalid');
+                return false;
+            } else if (!nameRegex.test(name)) {
+                nameError.style.display = 'block';
+                nameError.textContent = 'Full name can only contain letters and spaces.';
+                nameInput.classList.add('is-invalid');
+                return false;
+            } else if (name.length < 3) {
+                nameError.style.display = 'block';
+                nameError.textContent = 'Full name must be at least 3 characters long.';
+                nameInput.classList.add('is-invalid');
+                return false;
+            } else {
+                nameError.style.display = 'none';
+                nameInput.classList.remove('is-invalid');
+                return true;
+            }
+        }
+
+        const emailInput = document.getElementById('email');
+        const emailError = document.getElementById('emailError');
+
+        // Basic email pattern
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        emailInput.addEventListener('blur', validateEmail);
+        emailInput.addEventListener('input', validateEmail);
+
+        function validateEmail() {
+            const email = emailInput.value.trim();
+
+            if (email === '') {
+                emailError.style.display = 'block';
+                emailError.textContent = 'Email is required.';
+                emailInput.classList.add('is-invalid');
+                return false;
+            } else if (!emailRegex.test(email)) {
+                emailError.style.display = 'block';
+                emailError.textContent = 'Please enter a valid email address.';
+                emailInput.classList.add('is-invalid');
+                return false;
+            } else {
+                emailError.style.display = 'none';
+                emailInput.classList.remove('is-invalid');
+                return true;
+            }
+        }
+
+        const passwordInput = document.getElementById('password');
+        const confirmInput = document.getElementById('password_confirmation');
+        const passwordError = document.getElementById('passwordError');
+        const confirmError = document.getElementById('confirmError');
+
+        // Strong password rule
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_\-])[A-Za-z\d@$!%*?&#^()_\-]{8,}$/;
+
+        passwordInput.addEventListener('input', validatePassword);
+        passwordInput.addEventListener('blur', validatePassword);
+        confirmInput.addEventListener('input', validateConfirm);
+        confirmInput.addEventListener('blur', validateConfirm);
+
+        function validatePassword() {
+            const password = passwordInput.value.trim();
+
+            if (password === '') {
+                passwordError.style.display = 'block';
+                passwordError.textContent = 'Password is required.';
+                passwordInput.classList.add('is-invalid');
+                return false;
+            } else if (!passwordRegex.test(password)) {
+                passwordError.style.display = 'block';
+                passwordError.textContent = 'Must be 8+ chars with uppercase, lowercase, number, and special symbol.';
+                passwordInput.classList.add('is-invalid');
+                return false;
+            } else {
+                passwordError.style.display = 'none';
+                passwordInput.classList.remove('is-invalid');
+                validateConfirm(); // also check match while typing
+                return true;
+            }
+        }
+
+        function validateConfirm() {
+            const password = passwordInput.value.trim();
+            const confirm = confirmInput.value.trim();
+
+            if (confirm === '') {
+                confirmError.style.display = 'block';
+                confirmError.textContent = 'Please confirm your password.';
+                confirmInput.classList.add('is-invalid');
+                return false;
+            } else if (password !== confirm) {
+                confirmError.style.display = 'block';
+                confirmError.textContent = 'Passwords do not match.';
+                confirmInput.classList.add('is-invalid');
+                return false;
+            } else {
+                confirmError.style.display = 'none';
+                confirmInput.classList.remove('is-invalid');
+                return true;
+            }
+        }
+
+        const nameField = document.getElementById('name');
+        const emailField = document.getElementById('email');
+        const passwordField = document.getElementById('password');
+        const confirmField = document.getElementById('password_confirmation');
+        const registerBtn = document.getElementById('registerBtn');
+
+        // Combined validator to check all fields before enabling the button
+        function toggleRegisterButton() {
+            const nameValid = validateName ? validateName() : true;
+            const emailValid = validateEmail ? validateEmail() : true;
+            const passwordValid = validatePassword ? validatePassword() : true;
+            const confirmValid = validateConfirm ? validateConfirm() : true;
+
+            // Enable button only if all validations return true
+            if (nameValid && emailValid && passwordValid && confirmValid) {
+                registerBtn.disabled = false;
+            } else {
+                registerBtn.disabled = true;
+            }
+        }
+
+        // Attach listeners to all relevant inputs
+        [nameField, emailField, passwordField, confirmField].forEach(field => {
+            field.addEventListener('input', toggleRegisterButton);
+            field.addEventListener('blur', toggleRegisterButton);
+        });
+    </script>
 </body>
 </html>

@@ -238,14 +238,16 @@
                 
                 <div class="form-group">
                     <label class="form-label">Email Address</label>
-                    <input type="email" name="email" class="form-control" 
-                            placeholder="you@example.com" value="{{ old('email') }}" required>
+                    <input type="email" name="email" id="email" class="form-control" 
+                        placeholder="you@example.com" required>
+                    <small id="emailError" class="text-danger" style="display:none;"></small>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Password</label>
-                    <input type="password" name="password" class="form-control" 
-                            placeholder="Enter your password" required>
+                    <input type="password" name="password" id="password" class="form-control" 
+                        placeholder="Enter your password" required>
+                    <small id="passwordError" class="text-danger" style="display:none;"></small>
                 </div>
 
                 <div class="form-group">
@@ -263,8 +265,8 @@
                         </div>
                     </div>
                 </div>
-
-                <button type="submit" class="btn btn-login">Sign In</button>
+                
+                <button type="submit" id="submitBtn" class="btn btn-login" disabled>Sign In</button>
             </form>
 
             <div class="register-link">
@@ -274,5 +276,67 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const submitBtn = document.getElementById('submitBtn');
+        const emailError = document.getElementById('emailError');
+        const passwordError = document.getElementById('passwordError');
+
+        function validateEmail() {
+            const email = emailInput.value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (email === '') {
+                emailError.style.display = 'block';
+                emailError.textContent = 'Email is required.';
+                emailInput.classList.add('is-invalid');
+                return false;
+            } else if (!emailRegex.test(email)) {
+                emailError.style.display = 'block';
+                emailError.textContent = 'Please enter a valid email address.';
+                emailInput.classList.add('is-invalid');
+                return false;
+            } else {
+                emailError.style.display = 'none';
+                emailInput.classList.remove('is-invalid');
+                return true;
+            }
+        }
+
+        function validatePassword() {
+            const password = passwordInput.value.trim();
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_\-])[A-Za-z\d@$!%*?&#^()_\-]{8,}$/;
+
+            if (password === '') {
+                passwordError.style.display = 'block';
+                passwordError.textContent = 'Password is required.';
+                passwordInput.classList.add('is-invalid');
+                return false;
+            } else if (!passwordRegex.test(password)) {
+                passwordError.style.display = 'block';
+                passwordError.textContent = 'Password must be at least 8 chars with uppercase, lowercase, number, and special character.';
+                passwordInput.classList.add('is-invalid');
+                return false;
+            } else {
+                passwordError.style.display = 'none';
+                passwordInput.classList.remove('is-invalid');
+                return true;
+            }
+        }
+
+        // Combined validation check
+        function toggleSubmit() {
+            const validEmail = validateEmail();
+            const validPassword = validatePassword();
+            submitBtn.disabled = !(validEmail && validPassword);
+        }
+
+        // Trigger validation on blur and on typing
+        emailInput.addEventListener('blur', toggleSubmit);
+        passwordInput.addEventListener('blur', toggleSubmit);
+        emailInput.addEventListener('input', toggleSubmit);
+        passwordInput.addEventListener('input', toggleSubmit);
+    </script>
 </body>
 </html>

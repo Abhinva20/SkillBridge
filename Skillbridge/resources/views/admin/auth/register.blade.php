@@ -258,27 +258,31 @@
                 
                 <div class="form-group">
                     <label class="form-label">Full Name</label>
-                    <input type="text" name="name" class="form-control" 
-                            placeholder="Enter your full name" value="{{ old('name') }}" required>
+                    <input type="text" name="name" id="name" class="form-control"
+                        placeholder="Enter your full name" value="{{ old('name') }}" required>
+                    <small id="nameError" class="text-danger" style="display:none;"></small>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Admin Email</label>
-                    <input type="email" name="email" class="form-control" 
-                            placeholder="admin@skillbridge.com" value="{{ old('email') }}" required>
+                    <input type="email" name="email" id="email" class="form-control" 
+                        placeholder="admin@skillbridge.com" value="{{ old('email') }}" required>
+                    <small id="emailError" class="text-danger" style="display:none;"></small>
                 </div>
 
                 <div class="password-row">
                     <div class="form-group">
                         <label class="form-label">Password</label>
-                        <input type="password" name="password" class="form-control" 
-                                placeholder="Min. 8 characters" required>
+                        <input type="password" name="password" id="password" class="form-control" 
+                            placeholder="Min. 8 characters" required>
+                        <small id="passwordError" class="text-danger" style="display:none;"></small>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Confirm Password</label>
-                        <input type="password" name="password_confirmation" class="form-control" 
-                                placeholder="Re-enter password" required>
+                        <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" 
+                            placeholder="Re-enter password" required>
+                        <small id="passwordConfirmError" class="text-danger" style="display:none;"></small>
                     </div>
                 </div>
 
@@ -292,5 +296,153 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const nameInput = document.getElementById('name');
+            const nameError = document.getElementById('nameError');
+            const nameRegex = /^[A-Za-z\s]+$/; // letters and spaces only
+
+            nameInput.addEventListener('input', validateName);
+            nameInput.addEventListener('blur', validateName);
+
+            function validateName() {
+                const name = nameInput.value.trim();
+
+                if (name === '') {
+                    showError(nameInput, nameError, 'Full name is required.');
+                    return false;
+                } else if (name.length < 3) {
+                    showError(nameInput, nameError, 'Name must be at least 3 characters.');
+                    return false;
+                } else if (name.length > 50) {
+                    showError(nameInput, nameError, 'Name cannot exceed 50 characters.');
+                    return false;
+                } else if (!nameRegex.test(name)) {
+                    showError(nameInput, nameError, 'Name can only contain letters and spaces.');
+                    return false;
+                } else {
+                    hideError(nameInput, nameError);
+                    return true;
+                }
+            }
+
+            function showError(input, errorElement, message) {
+                errorElement.style.display = 'block';
+                errorElement.textContent = message;
+                input.classList.add('is-invalid');
+            }
+
+            function hideError(input, errorElement) {
+                errorElement.style.display = 'none';
+                input.classList.remove('is-invalid');
+            }
+
+            // Prevent form submission if invalid
+            const form = nameInput.closest('form');
+            form.addEventListener('submit', function(e) {
+                if (!validateName()) {
+                    e.preventDefault();
+                    alert('Please fix the errors before submitting.');
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const emailInput = document.getElementById('email');
+            const emailError = document.getElementById('emailError');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            emailInput.addEventListener('input', validateEmail);
+            emailInput.addEventListener('blur', validateEmail);
+
+            function validateEmail() {
+                const email = emailInput.value.trim();
+
+                if (email === '') {
+                    showError(emailInput, emailError, 'Email is required.');
+                    return false;
+                } else if (!emailRegex.test(email)) {
+                    showError(emailInput, emailError, 'Please enter a valid email address.');
+                    return false;
+                } else {
+                    hideError(emailInput, emailError);
+                    return true;
+                }
+            }
+
+            function showError(input, errorElement, message) {
+                errorElement.style.display = 'block';
+                errorElement.textContent = message;
+                input.classList.add('is-invalid');
+            }
+
+            function hideError(input, errorElement) {
+                errorElement.style.display = 'none';
+                input.classList.remove('is-invalid');
+            }
+
+            // Prevent form submission if invalid
+            const form = emailInput.closest('form');
+            form.addEventListener('submit', function(e) {
+                if (!validateEmail()) {
+                    e.preventDefault();
+                    alert('Please fix the errors before submitting.');
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('password');
+            const passwordConfirmInput = document.getElementById('password_confirmation');
+            const passwordError = document.getElementById('passwordError');
+            const passwordConfirmError = document.getElementById('passwordConfirmError');
+
+            passwordInput.addEventListener('input', validatePassword);
+            passwordInput.addEventListener('blur', validatePassword);
+            passwordConfirmInput.addEventListener('input', validatePassword);
+            passwordConfirmInput.addEventListener('blur', validatePassword);
+
+            function validatePassword() {
+                const password = passwordInput.value.trim();
+                const confirm = passwordConfirmInput.value.trim();
+                let valid = true;
+
+                if (password.length < 8) {
+                    showError(passwordInput, passwordError, 'Password must be at least 8 characters.');
+                    valid = false;
+                } else {
+                    hideError(passwordInput, passwordError);
+                }
+
+                if (confirm !== password) {
+                    showError(passwordConfirmInput, passwordConfirmError, 'Passwords do not match.');
+                    valid = false;
+                } else {
+                    hideError(passwordConfirmInput, passwordConfirmError);
+                }
+
+                return valid;
+            }
+
+            function showError(input, errorElement, message) {
+                errorElement.style.display = 'block';
+                errorElement.textContent = message;
+                input.classList.add('is-invalid');
+            }
+
+            function hideError(input, errorElement) {
+                errorElement.style.display = 'none';
+                input.classList.remove('is-invalid');
+            }
+
+            const form = passwordInput.closest('form');
+            form.addEventListener('submit', function(e) {
+                if (!validatePassword()) {
+                    e.preventDefault();
+                    alert('Please fix the password errors before submitting.');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
